@@ -1,24 +1,16 @@
-> Copy the entire contents of https://github.com/deepgram-starters/deepgram-starters-ui to the `./static/` folder.
+# Live Go Starter
 
-> The name of the project and repo, is less important than the correct configuration of the `deepgram.toml` file, if you wish for it to be included in future onboarding workflows.
+This sample demonstrates interacting with the Deepgram live streaming API from a Go server.
 
-# [Usecase] [Language] Starter
+## What is Deepgram?
 
-> Write an intro for this project
-
-Nifty little into, maybe a screenshot.
+[Deepgram](https://deepgram.com/) is a foundational AI company providing speech-to-text and language understanding capabilities to make data readable and actionable by human or machines.
 
 ## Sign-up to Deepgram
-
-> Please leave this section unchanged, unless providing a UTM on the URL.
 
 Before you start, it's essential to generate a Deepgram API key to use in this project. [Sign-up now for Deepgram](https://console.deepgram.com/signup).
 
 ## Quickstart
-
-> Detail the manual steps to get started.
-
-e.g.
 
 ### Manual
 
@@ -26,58 +18,43 @@ Follow these steps to get started with this starter application.
 
 #### Clone the repository
 
-Go to GitHub and [clone the repository](https://github.com/deepgram-starters/prerecorded-node-starter).
+Go to GitHub and [clone the repository](https://github.com/deepgram-starters/live-go-starter).
 
 #### Install dependencies
 
 Install the project dependencies.
 
 ```bash
-npm install
+go get
 ```
 
 #### Edit the config file
 
-> Config file can be any appropriate file for the framework/language. For e.g.
-> Node is using a config.json file, while Python is only use .env files
-
 Copy the code from `sample.env` and create a new file called `.env`. Paste in the code and enter your API key you generated in the [Deepgram console](https://console.deepgram.com/).
 
-```json
+```js
 DEEPGRAM_API_KEY=%api_key%
 ```
 
 #### Run the application
 
-> to support the UI, it must always run on port 8080
-
-The `dev` script will run a web and API server concurrently. Once running, you can [access the application in your browser](http://localhost:8080/).
+The `dev` script will run a web and API server concurrently. Once running, you can [access the application in your browser](http://localhost:3000/).
 
 ```bash
-npm start
+go run .
 ```
-
-## What is Deepgram?
-
-Deepgram is an AI speech platform which specializes in (NLU) Natural Language Understanding features and Transcription. It can help get the following from your audio.
-
-- [Speaker diarization](https://deepgram.com/product/speech-understanding/)
-- [Language detection](https://deepgram.com/product/speech-understanding/)
-- [Summarization](https://deepgram.com/product/speech-understanding/)
-- [Topic detection](https://deepgram.com/product/speech-understanding/)
-- [Language translation](https://deepgram.com/product/speech-understanding/)
-- [Sentiment analysis](https://deepgram.com/product/speech-understanding/)
-- [Entity detection](https://deepgram.com/product/speech-understanding/)
-- [Transcription](https://deepgram.com/product/transcription/)
-- [Redaction](https://deepgram.com/product/transcription/)
-
-## Create a Free Deepgram Account
-
-Before you start, it's essential to generate a Deepgram API key to use in our starter applications. [Sign-up now for Deepgram](https://console.deepgram.com/signup).
 
 ## Issue Reporting
 
 If you have found a bug or if you have a feature request, please report them at this repository issues section. Please do not report security vulnerabilities on the public GitHub issue tracker. The [Security Policy](./SECURITY.md) details the procedure for contacting Deepgram.
+
+## Getting Help
+
+We love to hear from you so if you have questions, comments or find a bug in the project, let us know! You can either:
+
+- [Open an issue in this repository](https://github.com/deepgram-starters/live-node-starter/issues/new)
+- [Join the Deepgram Github Discussions Community](https://github.com/orgs/deepgram/discussions)
+- [Join the Deepgram Discord Community](https://discord.gg/xWRaCDBtW4)
 
 ## Author
 
