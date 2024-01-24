@@ -42,7 +42,7 @@ func (c *MyCallback) Message(mr *api.MessageResponse) error {
 	if len(mr.Channel.Alternatives) == 0 || len(sentence) == 0 {
 		return nil
 	}
-	fmt.Printf("\n%s\n", sentence)
+	fmt.Printf("\n%s\n\n", sentence)
 	c.socket.WriteJSON(sentence)
 
 	return nil
@@ -137,7 +137,7 @@ func handleWebSocket(w http.ResponseWriter, r *http.Request) {
 					fmt.Println("Error sending data to Deepgram:", err)
 					// Handle the error as needed
 				}
-				fmt.Printf("WebSocket: sent %d bytes to Deepgram\n", n)
+				fmt.Printf("WebSocket: %d bytes from client \n", n)
 			} else if messageType == websocket.TextMessage {
 
 				err := json.Unmarshal(p, &clientMsg)
