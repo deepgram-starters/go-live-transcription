@@ -124,7 +124,7 @@ func handleWebSocket(w http.ResponseWriter, r *http.Request) {
 			if err != nil {
 				fmt.Println("Error sending data to Deepgram:", err)
 			} else {
-				fmt.Println("WebSocket: data sent to Deepgram\n", n)
+				fmt.Println("WebSocket: data sent to Deepgram")
 			}
 			fmt.Printf("WebSocket: %d bytes from client \n", n)
 		} else if messageType == websocket.TextMessage {
