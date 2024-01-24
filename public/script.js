@@ -1,5 +1,6 @@
 let isRecording = false;
 let websocket;
+let microphone;
 
 async function getMicrophone() {
   try {
@@ -38,13 +39,18 @@ async function startRecording() {
   document.body.classList.add("recording");
 }
 
-function stopRecording() {
+async function stopRecording() {
   if (isRecording === true) {
     microphone.stop();
+    websocket.send(JSON.stringify({ type: "closeMicrophone" }));
+    microphone = null;
     isRecording = false;
     console.log("client: microphone closed");
-    websocket = null;
-    console.log("client: disconnected from server");
+    if (websocket) {
+      websocket.close();
+      websocket = null;
+      console.log("client: disconnected from server");
+    }
     document.body.classList.remove("recording");
   }
 }
