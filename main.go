@@ -41,7 +41,8 @@ func (c *MyCallback) Message(mr *api.MessageResponse) error {
 	if len(mr.Channel.Alternatives) == 0 || len(sentence) == 0 {
 		return nil
 	}
-	fmt.Printf("\n%s\n\n", sentence)
+	fmt.Printf("\nDeepgram: %s\n\n", sentence)
+
 	c.socket.WriteJSON(sentence)
 	return nil
 }
