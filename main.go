@@ -26,14 +26,13 @@ type WebSocketMessage struct {
 
 // Implement your own callback
 type MyCallback struct {
-	Response *api.MessageResponse
-	SendChan chan *api.MessageResponse // New channel for communication
+	socket *websocket.Conn
 }
 
 // Initialize the channel in the MyCallback struct
-func NewMyCallback() *MyCallback {
+func NewMyCallback(conn *websocket.Conn) *MyCallback {
 	return &MyCallback{
-		SendChan: make(chan *api.MessageResponse),
+		socket: conn,
 	}
 }
 
@@ -44,11 +43,7 @@ func (c *MyCallback) Message(mr *api.MessageResponse) error {
 		return nil
 	}
 	fmt.Printf("\n%s\n", sentence)
-
-	c.Response = mr
-
-	// Send the response through the channel
-	c.SendChan <- mr
+	c.socket.WriteJSON(sentence)
 
 	return nil
 }
@@ -77,11 +72,13 @@ func (c MyCallback) Error(er *api.ErrorResponse) error {
 }
 
 func handleWebSocket(w http.ResponseWriter, r *http.Request) {
-	conn, err := upgrader.Upgrade(w, r, nil)
+	conn, err := upgrader.Upgrade(w, r, nil) // pass w into new mycallback
 	if err != nil {
 		fmt.Println("WebSocket upgrade failed:", err)
 		return
 	}
+
+	fmt.Println("WebSocket: connection established")
 
 	ctx := context.Background()
 	// set the Transcription options
@@ -92,20 +89,18 @@ func handleWebSocket(w http.ResponseWriter, r *http.Request) {
 	}
 
 	clientOptions := interfaces.ClientOptions{
-		EnableKeepAlive: true,
+		// EnableKeepAlive: true,
 	}
 
 	apiKey := os.Getenv("DEEPGRAM_API_KEY")
-	// implement your own callback
-	callback := NewMyCallback()
-	// create a Deepgram client
+	callback := NewMyCallback(conn)
+
 	dgClient, err := client.New(ctx, apiKey, &clientOptions, transcriptOptions, callback)
+	// dgClient, err := client.NewWithDefaults(ctx, transcriptOptions, callback)
 	if err != nil {
 		fmt.Println("ERROR creating LiveTranscription connection:", err)
 		return
 	}
-
-	var microphoneOpen bool
 
 	// connect the websocket to Deepgram
 	wsconn := dgClient.Connect()
@@ -123,13 +118,7 @@ func handleWebSocket(w http.ResponseWriter, r *http.Request) {
 	// Set up a loop to continuously read messages from the WebSocket
 	for {
 		select {
-		case response := <-callback.SendChan:
-			// Send the sentence to the client
-			err := conn.WriteJSON(response)
-			if err != nil {
-				fmt.Println("Error sending message:", err)
-				return
-			}
+		// Send the transcription to the client
 		default:
 			// Handle other WebSocket messages or events
 			messageType, p, err := conn.ReadMessage()
@@ -142,7 +131,6 @@ func handleWebSocket(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 			if messageType == websocket.BinaryMessage {
-				microphoneOpen = true
 				// Send the received message to Deepgram
 				n, err := dgClient.Write(p)
 				if err != nil {
@@ -159,31 +147,13 @@ func handleWebSocket(w http.ResponseWriter, r *http.Request) {
 				}
 				fmt.Printf("WebSocket: %s\n", clientMsg.Type)
 
-				if clientMsg.Type == "closeMicrophone" {
+				if clientMsg.Type == "closeMicrophone" { // Will need to reconnect in the UI
 					// Close the connection to Deepgram
 					dgClient.Stop()
-					if err != nil {
-						fmt.Println("Error closing connection to Deepgram:", err)
-						// Handle the error as needed
-					}
-					fmt.Println("WebSocket: closed connection to Deepgram")
-					microphoneOpen = false
+					// fmt.Println("WebSocket: closed connection to Deepgram")
 					return
 				}
 			}
-
-			// else if clientMsg.Type == "openMicrophone" {
-			// 	// Reopen the connection to Deepgram
-			// 	wsconn = dgClient.AttemptReconnect(5)
-			// 	if wsconn == nil {
-			// 		fmt.Println("Client.Connect failed")
-			// 		os.Exit(1)
-			// 	}
-			// 	fmt.Println("WebSocket: reopened connection to Deepgram")
-			// 	// Update the microphone state
-			// 	microphoneOpen = true
-			// }
-			_ = microphoneOpen
 		}
 	}
 }
