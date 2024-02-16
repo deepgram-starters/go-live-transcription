@@ -37,6 +37,9 @@ async function startRecording() {
   console.log("client: connected to server");
   await openMicrophone(microphone, websocket);
   document.body.classList.add("recording");
+  websocket.onmessage = (event) => {
+    document.getElementById("captions").innerHTML = JSON.parse(event.data);
+  };
 }
 
 async function stopRecording() {

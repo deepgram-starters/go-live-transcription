@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"os"
 	"strings"
@@ -11,6 +12,7 @@ import (
 	api "github.com/deepgram/deepgram-go-sdk/pkg/api/live/v1/interfaces"
 	interfaces "github.com/deepgram/deepgram-go-sdk/pkg/client/interfaces"
 	client "github.com/deepgram/deepgram-go-sdk/pkg/client/live"
+	"github.com/joho/godotenv"
 
 	"github.com/gorilla/websocket"
 )
@@ -80,6 +82,7 @@ func handleWebSocket(w http.ResponseWriter, r *http.Request) {
 	// Configuration for the Deepgram client
 	ctx := context.Background()
 	apiKey := os.Getenv("DEEPGRAM_API_KEY")
+	fmt.Println("Using API key:", apiKey)
 	clientOptions := interfaces.ClientOptions{
 		// EnableKeepAlive: true,
 	}
@@ -148,6 +151,11 @@ func handleWebSocket(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
 	client.InitWithDefault()
 	http.Handle("/", http.StripPrefix("/", http.FileServer(http.Dir("./public"))))
 	http.HandleFunc("/ws", handleWebSocket)

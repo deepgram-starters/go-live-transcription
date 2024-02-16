@@ -13,6 +13,7 @@ require (
 	github.com/go-logr/logr v1.3.0 // indirect
 	github.com/google/go-querystring v1.1.0 // indirect
 	github.com/hokaccha/go-prettyjson v0.0.0-20211117102719-0474bc63780f // indirect
+	github.com/joho/godotenv v1.5.1 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.17 // indirect
 	golang.org/x/net v0.17.0 // indirect
