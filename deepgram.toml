@@ -13,4 +13,4 @@
   output = ".env"
 
 [post-build]
-  message = "go run ."
+  message = "Run `go run .` to get up and running."
