@@ -1,4 +1,4 @@
-# Live Go Starter
+# Live Transcription Go Starter
 
 This sample demonstrates interacting with the Deepgram live streaming API from a Go server.
 
