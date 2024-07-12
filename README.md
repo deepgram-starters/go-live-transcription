@@ -1,4 +1,4 @@
-# Live Transcription Go Starter
+# Live Go Starter
 
 This sample demonstrates interacting with the Deepgram live streaming API from a Go server.
 
@@ -38,7 +38,7 @@ DEEPGRAM_API_KEY=%api_key%
 
 #### Run the application
 
-The `dev` script will run a web and API server concurrently. Once running, you can [access the application in your browser](http://localhost:3000/).
+The `dev` script will run a web and API server concurrently. Once running, you can [access the application in your browser](http://localhost:8080/).
 
 ```bash
 go run .
