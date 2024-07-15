@@ -38,6 +38,17 @@ func NewMyCallback(conn *websocket.Conn) *MyCallback {
 	}
 }
 
+func (c MyCallback) Open(ocr *api.OpenResponse) error {
+	// handle the open
+	fmt.Printf("\n[Open] Received\n")
+	return nil
+}
+
+func (c MyCallback) SpeechStarted(ssr *api.SpeechStartedResponse) error {
+	fmt.Printf("\n[SpeechStarted] Received\n")
+	return nil
+}
+
 func (c *MyCallback) Message(mr *api.MessageResponse) error {
 	sentence := strings.TrimSpace(mr.Channel.Alternatives[0].Transcript)
 	if len(mr.Channel.Alternatives) == 0 || len(sentence) == 0 {
@@ -70,6 +81,19 @@ func (c MyCallback) Error(er *api.ErrorResponse) error {
 	return nil
 }
 
+func (c MyCallback) Close(ocr *api.CloseResponse) error {
+	// handle the close
+	fmt.Printf("\n[Close] Received\n")
+	return nil
+}
+
+func (c MyCallback) UnhandledEvent(byData []byte) error {
+	// handle the unhandled event
+	fmt.Printf("\n[UnhandledEvent] Received\n")
+	fmt.Printf("UnhandledEvent: %s\n\n", string(byData))
+	return nil
+}
+
 func handleWebSocket(w http.ResponseWriter, r *http.Request) {
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
@@ -96,15 +120,15 @@ func handleWebSocket(w http.ResponseWriter, r *http.Request) {
 	callback := NewMyCallback(conn)
 
 	// Create a new Deepgram LiveTranscription client with config options
-	dgClient, err := client.New(ctx, apiKey, &clientOptions, transcriptOptions, callback)
+	dgClient, err := client.New(ctx, apiKey, &clientOptions, &transcriptOptions, callback)
 	if err != nil {
 		fmt.Println("ERROR creating LiveTranscription connection:", err)
 		return
 	}
 
 	// Connect the websocket to Deepgram
-	wsconn := dgClient.Connect()
-	if wsconn == nil {
+	bConnected := dgClient.Connect()
+	if !bConnected {
 		fmt.Println("Client.Connect failed")
 		os.Exit(1)
 	}

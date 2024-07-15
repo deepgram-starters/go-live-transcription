@@ -20,6 +20,17 @@ type MyCallback struct {
 	t                  *testing.T
 }
 
+func (c MyCallback) Open(ocr *api.OpenResponse) error {
+	// handle the open
+	fmt.Printf("\n[Open] Received\n")
+	return nil
+}
+
+func (c MyCallback) SpeechStarted(ssr *api.SpeechStartedResponse) error {
+	fmt.Printf("\n[SpeechStarted] Received\n")
+	return nil
+}
+
 func (c MyCallback) Message(mr *api.MessageResponse) error {
 	// handle the message
 	if len(mr.Channel.Alternatives) == 0 {
@@ -79,6 +90,19 @@ func (c MyCallback) UtteranceEnd(ur *api.UtteranceEndResponse) error {
 	return nil
 }
 
+func (c MyCallback) Close(ocr *api.CloseResponse) error {
+	// handle the close
+	fmt.Printf("\n[Close] Received\n")
+	return nil
+}
+
+func (c MyCallback) UnhandledEvent(byData []byte) error {
+	// handle the unhandled event
+	fmt.Printf("\n[UnhandledEvent] Received\n")
+	fmt.Printf("UnhandledEvent: %s\n\n", string(byData))
+	return nil
+}
+
 const (
 	STREAM_URL = "http://stream.live.vc.bbcmedia.co.uk/bbc_world_service"
 )
@@ -104,7 +128,7 @@ func TestDeepgramLiveTranscription(t *testing.T) {
 	}
 
 	// Create a Deepgram client
-	dgClient, err := client.NewWithDefaults(ctx, transcriptOptions, callback)
+	dgClient, err := client.NewWithDefaults(ctx, &transcriptOptions, callback)
 	if err != nil {
 		t.Fatalf("ERROR creating LiveTranscription connection: %v", err)
 	}
@@ -119,7 +143,7 @@ func TestDeepgramLiveTranscription(t *testing.T) {
 
 	// Connect the websocket to Deepgram
 	bConnected := dgClient.Connect()
-	if bConnected == nil {
+	if !bConnected {
 		t.Fatal("Client.Connect failed")
 	}
 
@@ -131,12 +155,10 @@ func TestDeepgramLiveTranscription(t *testing.T) {
 	select {
 	case <-transcriptReceived:
 		fmt.Println("Transcript received")
+		dgClient.Stop()
 	case <-time.After(30 * time.Second):
 		t.Fatal("Timeout waiting for transcript")
 	}
-
-	// Close client
-	dgClient.Stop()
 
 	fmt.Printf("Test finished\n")
 }
