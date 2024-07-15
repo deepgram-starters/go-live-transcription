@@ -44,6 +44,20 @@ The `dev` script will run a web and API server concurrently. Once running, you c
 go run .
 ```
 
+## Testing
+
+To contribute or modify test code, ensure you have the necessary dependencies installed. The dependencies are managed via `go.mod`, so you just need to run:
+
+```sh
+go mod tidy
+```
+
+To run the tests, use the following command:
+
+```sh
+go test -v ./tests
+```
+
 ## Issue Reporting
 
 If you have found a bug or if you have a feature request, please report them at this repository issues section. Please do not report security vulnerabilities on the public GitHub issue tracker. The [Security Policy](./SECURITY.md) details the procedure for contacting Deepgram.
