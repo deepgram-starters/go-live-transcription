@@ -3,7 +3,7 @@ module github.com/deepgram-starters/live-go-starter
 go 1.20
 
 require (
-	github.com/deepgram/deepgram-go-sdk v1.3.6
+	github.com/deepgram/deepgram-go-sdk v1.4.0
 	github.com/gorilla/websocket v1.5.1
 	github.com/joho/godotenv v1.5.1
 )
