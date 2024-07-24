@@ -155,7 +155,7 @@ func TestDeepgramLiveTranscription(t *testing.T) {
 	select {
 	case <-transcriptReceived:
 		fmt.Println("Transcript received")
-		dgClient.Stop()
+		// dgClient.Stop()
 	case <-time.After(30 * time.Second):
 		t.Fatal("Timeout waiting for transcript")
 	}
