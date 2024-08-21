@@ -20,6 +20,10 @@ import (
 var upgrader = websocket.Upgrader{
 	ReadBufferSize:  1024,
 	WriteBufferSize: 1024,
+	// Allow all origins
+	CheckOrigin: func(r *http.Request) bool {
+		return true
+	},
 }
 
 type WebSocketMessage struct {
@@ -76,7 +80,7 @@ func (c MyCallback) UtteranceEnd(ur *api.UtteranceEndResponse) error {
 func (c MyCallback) Error(er *api.ErrorResponse) error {
 	fmt.Printf("\n[Error] Received\n")
 	fmt.Printf("Error.Type: %s\n", er.Type)
-	fmt.Printf("Error.Message: %s\n", er.Message)
+	fmt.Printf("Error.Message: %s\n", er.ErrMsg)
 	fmt.Printf("Error.Description: %s\n\n", er.Description)
 	return nil
 }
