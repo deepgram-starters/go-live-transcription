@@ -1,5 +1,5 @@
-github.com/deepgram/deepgram-go-sdk v1.5.0 h1:RNyEO3rhmrpd12E93HZYlSUOUvbBfZHVP2nOpgNlHe4=
-github.com/deepgram/deepgram-go-sdk v1.5.0/go.mod h1:il+6HLmvxa47EG12LG6VwzaHcyI8Lo+yfBsOcDq3R8s=
+github.com/deepgram/deepgram-go-sdk v1.6.0 h1:3wQfT2HmoQUjRHjPavJE3NEMBEHXQF71C2NOj0Enp2U=
+github.com/deepgram/deepgram-go-sdk v1.6.0/go.mod h1:il+6HLmvxa47EG12LG6VwzaHcyI8Lo+yfBsOcDq3R8s=
 github.com/dvonthenen/websocket v1.5.1-dyv.2 h1:OXlWJJkeHt8k4+MEI0Y8SQjY2ihHYD2z/tI7sZZfsnA=
 github.com/dvonthenen/websocket v1.5.1-dyv.2/go.mod h1:q2GbopbpFJvBP4iqVvqwwahVmvu2HnCfdqCWDoQVKMM=
 github.com/fatih/color v1.15.0 h1:kOqh6YHBtK8aywxGerMG2Eq3H6Qgoqeo13Bk2Mv/nBs=
