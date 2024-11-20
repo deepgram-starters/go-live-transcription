@@ -1,6 +1,6 @@
 # Go Live Transcription Starter
 
-This sample demonstrates interacting with the Deepgram live streaming API from a Go server.
+Get started using Deepgram's Live Transcription with this Go demo app.
 
 ## What is Deepgram?
 
