@@ -116,7 +116,7 @@ func handleWebSocket(w http.ResponseWriter, r *http.Request) {
 	}
 	transcriptOptions := interfaces.LiveTranscriptionOptions{
 		Language:    "en-US",
-		Model:       "nova-2",
+		Model:       "nova-3",
 		SmartFormat: true,
 	}
 
