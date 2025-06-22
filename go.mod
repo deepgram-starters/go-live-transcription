@@ -1,6 +1,8 @@
 module github.com/deepgram-starters/live-go-starter
 
-go 1.20
+go 1.23.0
+
+toolchain go1.24.4
 
 require (
 	github.com/deepgram/deepgram-go-sdk v1.6.2
@@ -16,7 +18,7 @@ require (
 	github.com/hokaccha/go-prettyjson v0.0.0-20211117102719-0474bc63780f // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.17 // indirect
-	golang.org/x/net v0.23.0 // indirect
-	golang.org/x/sys v0.18.0 // indirect
+	golang.org/x/net v0.38.0 // indirect
+	golang.org/x/sys v0.31.0 // indirect
 	k8s.io/klog/v2 v2.110.1 // indirect
 )
