@@ -2,7 +2,7 @@
   title = "Go Live Transcription Starter"
   description = "Get started using Deepgram's Live Transcription with this Go demo app"
   author = "Deepgram DX Team <devrel@deepgram.com> (https://developers.deepgram.com)"
-  useCase = "Live STT"
+  useCase = "Live"
   language = "Go"
 
 [build]
