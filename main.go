@@ -9,9 +9,9 @@ import (
 	"os"
 	"strings"
 
-	api "github.com/deepgram/deepgram-go-sdk/pkg/api/live/v1/interfaces"
+	api "github.com/deepgram/deepgram-go-sdk/pkg/api/listen/v1/websocket/interfaces"
 	interfaces "github.com/deepgram/deepgram-go-sdk/pkg/client/interfaces"
-	client "github.com/deepgram/deepgram-go-sdk/pkg/client/live"
+	client "github.com/deepgram/deepgram-go-sdk/pkg/client/listen"
 	"github.com/joho/godotenv"
 
 	"github.com/gorilla/websocket"
@@ -124,7 +124,7 @@ func handleWebSocket(w http.ResponseWriter, r *http.Request) {
 	callback := NewMyCallback(conn)
 
 	// Create a new Deepgram LiveTranscription client with config options
-	dgClient, err := client.New(ctx, apiKey, &clientOptions, &transcriptOptions, callback)
+	dgClient, err := client.NewWSUsingCallback(ctx, apiKey, &clientOptions, &transcriptOptions, callback)
 	if err != nil {
 		fmt.Println("ERROR creating LiveTranscription connection:", err)
 		return
@@ -184,8 +184,11 @@ func main() {
 		log.Fatal("Error loading .env file")
 	}
 
+	serverAddress := "0.0.0.0:8080"
+
 	client.InitWithDefault()
 	http.Handle("/", http.StripPrefix("/", http.FileServer(http.Dir("./public"))))
 	http.HandleFunc("/ws", handleWebSocket)
-	http.ListenAndServe(":8080", nil)
+	fmt.Println("Server started on ", serverAddress)
+	http.ListenAndServe(serverAddress, nil)
 }
