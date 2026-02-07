@@ -2,8 +2,9 @@
   title = "Go Live Transcription Starter"
   description = "Get started using Deepgram's Live Transcription with this Go demo app"
   author = "Deepgram DX Team <devrel@deepgram.com> (https://developers.deepgram.com)"
-  useCase = "Live STT"
-  language = "Go"
+  useCase = "live-transcription"
+  language = "go"
+  tags = ["live-transcription", "live-stt", "real-time-transcription", "real-time-asr", "streaming-transcription", "live-speech-to-text", "go"]
 
 [build]
   command = "go get"
