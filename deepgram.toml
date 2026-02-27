@@ -1,17 +1,52 @@
 [meta]
-  title = "Go Live Transcription Starter"
-  description = "Get started using Deepgram's Live Transcription with this Go demo app"
-  author = "Deepgram DX Team <devrel@deepgram.com> (https://developers.deepgram.com)"
-  useCase = "live-transcription"
-  language = "go"
-  tags = ["live-transcription", "live-stt", "real-time-transcription", "real-time-asr", "streaming-transcription", "live-speech-to-text", "go"]
+title = "Go Live Transcription"
+description = "Get started using Deepgram's Live Transcription with this Go demo app"
+author = "Deepgram DX Team <devrel@deepgram.com> (https://developers.deepgram.com)"
+repository = "https://github.com/deepgram-starters/go-live-transcription"
+useCase = "live-transcription"
+language = "go"
+framework = "go"
+sdk = "N/A"
+tags = ["live-transcription", "live-stt", "real-time-transcription", "real-time-asr", "streaming-transcription", "live-speech-to-text", "go"]
 
-[build]
-  command = "go get"
+[check]
+command = ["command -v git", "command -v go", "command -v pnpm"]
+message = "Prerequisites checked"
 
-[config]
-  sample = "sample.env"
-  output = ".env"
+[install.pre]
+command = "git submodule update --init --recursive"
+message = "Submodules initialized"
 
-[post-build]
-  message = "Run `go run .` to get up and running."
+[install]
+command = ["go mod tidy", "cd frontend && corepack pnpm install"]
+message = "Dependencies installed"
+
+[install.config]
+sample = "sample.env"
+output = ".env"
+
+[start.pre]
+command = ["test -f .env || echo 'Error: .env file not found'", "test -d frontend/.git || echo 'Error: Frontend submodule not initialized'"]
+message = "Pre-flight checks complete"
+
+[start]
+command = ["go run .", "cd frontend && pnpm run dev -- --port 8080 --no-open"]
+parallel = true
+message = "Application running on http://localhost:8080"
+
+[update]
+command = "git submodule update --remote --merge"
+message = "Submodules updated"
+
+[clean]
+command = ["rm -f go-live-transcription", "rm -rf frontend/node_modules", "rm -rf frontend/dist"]
+message = "Build artifacts cleaned"
+
+# Eject frontend and contracts submodules for standalone development
+[eject-frontend]
+command = "make eject-frontend"
+message = "Frontend ejected successfully"
+
+[test]
+command = "bash contracts/tests/run-live-transcription-app.sh"
+message = "Running conformance tests"
