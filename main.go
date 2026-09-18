@@ -54,6 +54,7 @@ type config struct {
 type liveControlClient interface {
 	WriteJSON(payload interface{}) error
 	KeepAlive() error
+	Finalize() error
 }
 
 type liveControlMessage struct {
@@ -71,6 +72,8 @@ func forwardLiveControl(data []byte, client liveControlClient) error {
 		return client.WriteJSON(liveControlMessage{Type: "CloseStream"})
 	case "KeepAlive":
 		return client.KeepAlive()
+	case "Finalize":
+		return client.Finalize()
 	default:
 		return nil
 	}

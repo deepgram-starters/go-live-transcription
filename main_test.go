@@ -8,6 +8,7 @@ import (
 type fakeLiveControlClient struct {
 	lastJSON  string
 	keptAlive bool
+	finalized bool
 }
 
 func (c *fakeLiveControlClient) WriteJSON(payload interface{}) error {
@@ -23,16 +24,23 @@ func (c *fakeLiveControlClient) KeepAlive() error {
 	return nil
 }
 
+func (c *fakeLiveControlClient) Finalize() error {
+	c.finalized = true
+	return nil
+}
+
 func TestForwardLiveControl(t *testing.T) {
 	tests := []struct {
 		name      string
 		message   string
 		lastJSON  string
 		keptAlive bool
+		finalized bool
 		wantErr   bool
 	}{
 		{name: "forwards CloseStream", message: `{"type":"CloseStream"}`, lastJSON: `{"type":"CloseStream"}`},
 		{name: "forwards KeepAlive", message: `{"type":"KeepAlive"}`, keptAlive: true},
+		{name: "forwards Finalize", message: `{"type":"Finalize"}`, finalized: true},
 		{name: "ignores unrelated JSON", message: `{"message":"CloseStream"}`},
 		{name: "rejects malformed JSON", message: `{`, wantErr: true},
 	}
@@ -49,6 +57,9 @@ func TestForwardLiveControl(t *testing.T) {
 			}
 			if client.keptAlive != tt.keptAlive {
 				t.Errorf("KeepAlive() called = %t, want %t", client.keptAlive, tt.keptAlive)
+			}
+			if client.finalized != tt.finalized {
+				t.Errorf("Finalize() called = %t, want %t", client.finalized, tt.finalized)
 			}
 		})
 	}
