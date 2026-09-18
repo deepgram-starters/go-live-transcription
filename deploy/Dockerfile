@@ -2,7 +2,7 @@
 FROM golang:1.25-alpine AS caddy-builder
 WORKDIR /build
 RUN go install github.com/caddyserver/xcaddy/cmd/xcaddy@v0.4.5
-RUN xcaddy build v2.10.2 --with github.com/mholt/caddy-ratelimit
+RUN xcaddy build v2.10.2 --with github.com/mholt/caddy-ratelimit@v0.1.0
 # Binary output: /build/caddy
 
 # Stage 2: Build frontend
