@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"net/http/httptest"
 	"testing"
 )
 
@@ -9,6 +10,18 @@ type fakeLiveControlClient struct {
 	lastJSON  string
 	keptAlive bool
 	finalized bool
+}
+
+func TestQueryBoolInterimResultsDefaultsOff(t *testing.T) {
+	request := httptest.NewRequest("GET", "/api/live-transcription", nil)
+	if queryBool(request, "interim_results", false) {
+		t.Fatal("interim_results defaults to true, want false")
+	}
+
+	request = httptest.NewRequest("GET", "/api/live-transcription?interim_results=true", nil)
+	if !queryBool(request, "interim_results", false) {
+		t.Fatal("interim_results=true was not honored")
+	}
 }
 
 func (c *fakeLiveControlClient) WriteJSON(payload interface{}) error {

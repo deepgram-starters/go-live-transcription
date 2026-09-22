@@ -323,7 +323,7 @@ func handleLiveTranscription(cfg config) http.HandlerFunc {
 			Punctuate:      queryBool(r, "punctuate", true),
 			Diarize:        queryBool(r, "diarize", false),
 			FillerWords:    queryBool(r, "filler_words", false),
-			InterimResults: true,
+			InterimResults: queryBool(r, "interim_results", false),
 		}
 
 		log.Printf("Connecting to Deepgram STT: model=%s, language=%s, encoding=%s, sample_rate=%d, channels=%d",

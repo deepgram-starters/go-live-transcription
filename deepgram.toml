@@ -48,5 +48,5 @@ command = "make eject-frontend"
 message = "Frontend ejected successfully"
 
 [test]
-command = "bash contracts/tests/run-live-transcription-app.sh"
-message = "Running conformance tests"
+command = "make test"
+message = "Running unit and conformance tests"
