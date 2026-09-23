@@ -1,7 +1,7 @@
 # Go Live Transcription Makefile
 # Framework-agnostic commands for managing the project and git submodules
 
-.PHONY: help check check-prereqs init install install-frontend build start start-backend start-frontend test update clean status eject-frontend
+.PHONY: help check check-prereqs init install install-frontend build start start-backend start-frontend test test-unit test-contract update clean status eject-frontend
 
 # Default target: show help
 help:
@@ -100,8 +100,14 @@ start-frontend:
 	@echo "==> Starting frontend on http://localhost:8080"
 	cd frontend && corepack pnpm run dev -- --port 8080 --no-open
 
-# Run contract conformance tests
-test:
+# Run all tests.
+test: test-unit test-contract
+
+test-unit:
+	@echo "==> Running Go unit tests..."
+	go test ./...
+
+test-contract:
 	@if [ ! -f ".env" ]; then \
 		echo "Error: .env file not found. Copy sample.env to .env and add your DEEPGRAM_API_KEY"; \
 		exit 1; \

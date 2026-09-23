@@ -51,6 +51,34 @@ type config struct {
 	SessionSecret  []byte
 }
 
+type liveControlClient interface {
+	WriteJSON(payload interface{}) error
+	KeepAlive() error
+	Finalize() error
+}
+
+type liveControlMessage struct {
+	Type string `json:"type"`
+}
+
+func forwardLiveControl(data []byte, client liveControlClient) error {
+	var control liveControlMessage
+	if err := json.Unmarshal(data, &control); err != nil {
+		return fmt.Errorf("invalid control message: %w", err)
+	}
+
+	switch control.Type {
+	case "CloseStream":
+		return client.WriteJSON(liveControlMessage{Type: "CloseStream"})
+	case "KeepAlive":
+		return client.KeepAlive()
+	case "Finalize":
+		return client.Finalize()
+	default:
+		return nil
+	}
+}
+
 func loadConfig() config {
 	_ = godotenv.Load()
 
@@ -286,15 +314,16 @@ func handleLiveTranscription(cfg config) http.HandlerFunc {
 		sampleRate, _ := strconv.Atoi(queryOr(r, "sample_rate", "16000"))
 		channels, _ := strconv.Atoi(queryOr(r, "channels", "1"))
 		tOptions := &dginterfaces.LiveTranscriptionOptions{
-			Model:       queryOr(r, "model", "nova-3"),
-			Language:    queryOr(r, "language", "en"),
-			Encoding:    queryOr(r, "encoding", "linear16"),
-			SampleRate:  sampleRate,
-			Channels:    channels,
-			SmartFormat: queryBool(r, "smart_format", true),
-			Punctuate:   queryBool(r, "punctuate", true),
-			Diarize:     queryBool(r, "diarize", false),
-			FillerWords: queryBool(r, "filler_words", false),
+			Model:          queryOr(r, "model", "nova-3"),
+			Language:       queryOr(r, "language", "en"),
+			Encoding:       queryOr(r, "encoding", "linear16"),
+			SampleRate:     sampleRate,
+			Channels:       channels,
+			SmartFormat:    queryBool(r, "smart_format", true),
+			Punctuate:      queryBool(r, "punctuate", true),
+			Diarize:        queryBool(r, "diarize", false),
+			FillerWords:    queryBool(r, "filler_words", false),
+			InterimResults: queryBool(r, "interim_results", false),
 		}
 
 		log.Printf("Connecting to Deepgram STT: model=%s, language=%s, encoding=%s, sample_rate=%d, channels=%d",
@@ -346,9 +375,8 @@ func handleLiveTranscription(cfg config) http.HandlerFunc {
 					return
 				}
 			case websocket.TextMessage:
-				// Control messages from the browser (e.g. CloseStream) trigger a finalize.
-				if strings.Contains(string(data), "CloseStream") {
-					_ = dgClient.Finalize()
+				if err := forwardLiveControl(data, dgClient); err != nil {
+					log.Printf("Failed to forward control message to Deepgram: %v", err)
 				}
 			}
 		}
